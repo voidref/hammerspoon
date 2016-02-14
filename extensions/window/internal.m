@@ -1,5 +1,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
+#import <AppKit/AppKit.h>
 #import <LuaSkin/LuaSkin.h>
 #import "window.h"
 #import "../application/application.h"
@@ -276,14 +277,27 @@ static int window__setframe(lua_State* L) {
     NSPoint theOrigin = geom_topoint(L, 2);
     NSSize theSize = geom_tosize(L, 2);
     
-    NSRect theFrame = NSMakeRect(theOrigin.x, theOrigin.y, theSize.width, theSize.height);
-                                 
-    CFTypeRef frameStorage = (CFTypeRef)(AXValueCreate(kAXValueTypeCGRect, (const void *)&theFrame));
-    
-    if (frameStorage) {
-        AXUIElementSetAttributeValue(win, (CFStringRef)@"AXFrame", frameStorage);
-        CFRelease(frameStorage);
+//    NSRect theFrame = NSMakeRect(theOrigin.x, theOrigin.y, theSize.width, theSize.height);
+
+    CFTypeRef sizeStorage = (CFTypeRef)(AXValueCreate(kAXValueCGSizeType, (const void *)&theSize));
+    CFTypeRef positionStorage = (CFTypeRef)(AXValueCreate(kAXValueCGPointType, (const void *)&theOrigin));
+
+    if ( sizeStorage ) {
+        AXUIElementSetAttributeValue(win, (CFStringRef)NSAccessibilitySizeAttribute, sizeStorage);
+        CFRelease(sizeStorage);
     }
+
+    if ( positionStorage ) {
+        AXUIElementSetAttributeValue(win, (CFStringRef)NSAccessibilityPositionAttribute, positionStorage);
+        CFRelease(positionStorage);
+    }
+
+//    CFTypeRef frameStorage = (CFTypeRef)(AXValueCreate(kAXValueTypeCGRect, (const void *)&theFrame));
+//    
+//    if (frameStorage) {
+//        AXUIElementSetAttributeValue(win, (CFStringRef)@"AXFrame", frameStorage);
+//        CFRelease(frameStorage);
+//    }
     
     lua_pushvalue(L, 1);
     return 1;
@@ -779,7 +793,7 @@ static const luaL_Reg windowlib[] = {
     {"_setFullScreen", window__setfullscreen},
     {"isFullScreen", window_isfullscreen},
     {"snapshot", window_snapshot},
-    {"setFrame", window__setframe},
+    {"_setFrameOne", window__setframe},
 
     {NULL, NULL}
 };

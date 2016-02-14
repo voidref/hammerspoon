@@ -74,9 +74,9 @@
     XCUIElement *textField = [hammerspoonConsoleWindow childrenMatchingType:XCUIElementTypeTextField].element;
 
     [hammerspoonConsoleWindow click];
-    [textField typeText:@"hs.window.focusedWindow()"];
-    [textField typeKey:@";" modifierFlags:XCUIKeyModifierShift];
-    [textField typeText:@"setFrame(hs.geometry.rect(0,50,400,300), 0)\r"];
+    [textField typeText:@"hs.window.focusedWindow():setFrame(hs.geometry.rect(0,50,400,300), 0)\r"];
+//    [textField typeKey:@";" modifierFlags:XCUIKeyModifierShift];
+//    [textField typeText:@"setFrame(hs.geometry.rect(0,50,400,300), 0)\r"];
 
     CGRect newFrame = hammerspoonConsoleWindow.frame;
 
