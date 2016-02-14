@@ -281,10 +281,8 @@ static int window__setframe(lua_State* L) {
     CFTypeRef frameStorage = (CFTypeRef)(AXValueCreate(kAXValueTypeCGRect, (const void *)&theFrame));
     
     if (frameStorage) {
-        CFRelease(frameStorage);
-    }
-    else {
         AXUIElementSetAttributeValue(win, (CFStringRef)@"AXFrame", frameStorage);
+        CFRelease(frameStorage);
     }
     
     lua_pushvalue(L, 1);
