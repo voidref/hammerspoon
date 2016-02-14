@@ -264,7 +264,8 @@ function window:_frame() -- get actual window frame right now
 end
 
 function window:_setFrame(f) -- set window frame instantly
-  self:_setSize(f) self:_setTopLeft(f) return self:_setSize(f)
+    self:_setFrame(f) return self:_setSize(f)
+//  self:_setSize(f) self:_setTopLeft(f) return self:_setSize(f)
 end
 
 local function setFrameAnimated(self,id,f,duration)

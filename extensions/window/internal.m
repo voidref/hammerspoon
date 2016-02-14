@@ -271,6 +271,25 @@ static int window__settopleft(lua_State* L) {
     return 1;
 }
 
+static int window__setframe(lua_State* L) {
+    AXUIElementRef win = get_window_arg(L, 1);
+    NSPoint theOrigin = geom_topoint(L, 2);
+    NSSize theSize = geom_tosize(L, 2);
+    
+    NSRect theFrame = NSMakeRect(theOrigin.x, theOrigin.y, theSize.width, theSize.height);
+                                 
+    CFTypeRef frameStorage = (CFTypeRef)(AXValueCreate(kAXValueTypeCGRect, (const void *)&theFrame));
+    
+    if (frameStorage) {
+        CFRelease(frameStorage);
+    }
+    else {
+        AXUIElementSetAttributeValue(win, (CFStringRef)@"AXFrame", frameStorage);
+    }
+    
+    lua_pushvalue(L, 1);
+    return 1;
+}
 //TODO window__setframe, but it's Yosemite only :/
 //https://developer.apple.com/library/prerelease/mac/documentation/AppKit/Reference/NSAccessibility_Protocol_Reference/index.html#//apple_ref/occ/intfp/NSAccessibility/accessibilityFrame
 
@@ -762,6 +781,7 @@ static const luaL_Reg windowlib[] = {
     {"_setFullScreen", window__setfullscreen},
     {"isFullScreen", window_isfullscreen},
     {"snapshot", window_snapshot},
+    {"setFrame", window__setframe},
 
     {NULL, NULL}
 };
